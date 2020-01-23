@@ -1,0 +1,2 @@
+qsort(pointer, length_of_;arr, sizeofeachelement, myComp)
+sort(begin, end, myComp);
