@@ -24,7 +24,7 @@ int main(){
             if(i==0){
                 count++;
                 resource1_ending = intervals[i].second;
-            } else {
+            } else {                
                 if(resource1_ending!=resource2_ending)   {
                     if(intervals[i].first >= max(resource1_ending, resource2_ending)){
                         count++;
