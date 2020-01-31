@@ -1,159 +1,82 @@
 #include <bits/stdc++.h>
-#include <queue>
+
 using namespace std;
-
-vector<string> split_string(string);
-
-// Complete the minimumMoves function below.
-int minimumMoves(vector<string> grid, int startX, int startY, int goalX, int goalY) {
-    queue<pair<int,int>> Q;
-    int N = grid.size();
-    pair<int,int> grid2[N][N];
-    for(int i = 0; i<N; i++){
-        for(int j=0; j<N; j++){
-            if(grid[i][j]=='.'){
-                grid2[i][j] = make_pair(-1,-1);
-            } else {
-                grid2[i][j] = make_pair(-2,-1);
-            }
+int substringDiff(int k, string s1, string s2) {
+    int n1 = s1.size();
+    int n2 = s2.size();
+    pair<int,int> dp[n1+1][n2+1];
+    for(int i=0;i<=n1;i++){
+        for(int j=0;j<=n2;j++){
+            dp[i][j] = make_pair(0,0);
         }
     }
 
-    Q.push(make_pair(startX, startY));
-    grid2[startX][startY] = make_pair(0,-1);    
-    while(!Q.empty()){
-        pair<int,int> curr_pair = Q.front();
-        Q.pop();
-        int i = curr_pair.first;
-        int j = curr_pair.second;
-        if(i==goalX && j==goalY){
-            break;
-        }
-        if(j-1>=0){
-            //left
-            if(grid2[i][j-1].first==-1){
-                if(grid2[i][j].second==3){
-                    grid2[i][j-1] = make_pair(grid2[i][j].first,3);
-                } else {
-                    grid2[i][j-1] = make_pair(grid2[i][j].first+1,3);
+    //len, mismatches of far
+    int ans = 0;
+    for(int i=1;i<=n1;i++){
+        for(int j=1;j<=n2;j++){            
+            if(s1[i-1]==s2[j-1]){                
+                pair<int,int> p = dp[i-1][j-1];                
+                dp[i][j] = make_pair(p.first+1, p.second);                
+                          
+            }            
+            else {
+                pair<int,int> p = dp[i-1][j-1];
+                if(p.second <= k-1){
+                   // if(i==10 && j==10) cout << p.second << " " << p.first << "\n";
+                    dp[i][j] = make_pair(p.first+1, p.second+1);                    
+                } else {                    
+                    int len_now = p.first;
+                    if(len_now==0){
+                        //if k == 0
+                        if(k==0){
+                            dp[i][j] = make_pair(0, 0);
+                        } else {
+                            dp[i][j] = make_pair(1, 1);
+                        }
+                    } else {
+                        int back_i = i-p.first;
+                        int back_j = j-p.first;
+                        while(s1[back_i-1]==s2[back_j-1] && len_now>0){
+                            back_j++;
+                            back_i++;
+                            len_now--;                            
+                        }
+                        if(len_now==0){
+                            if(k==0){
+                                dp[i][j] = make_pair(0, 0);
+                            } else {
+                                dp[i][j] = make_pair(1, 1);
+                            }
+                        } else {
+                            if(k==0) dp[i][j] = make_pair(0, 0);                            
+                            else dp[i][j] = make_pair(len_now, p.second);                            
+                        }
+                    }                   
                 }
-                Q.push(make_pair(i,j-1));
             }
-        }
+           
 
-        if(i-1>=0){
-            //top
-            if(grid2[i-1][j].first==-1){
-                if(grid2[i][j].second==0){
-                    grid2[i-1][j] = make_pair(grid2[i][j].first,0);
-                } else {
-                    grid2[i-1][j] = make_pair(grid2[i][j].first+1,0);
-                }
-                Q.push(make_pair(i-1,j));
+           
+            if(ans <= dp[i][j].first){
+                ans = dp[i][j].first;               
             }
-        }
-
-        if(j+1<N){
-            //right
-            if(grid2[i][j+1].first==-1){
-                if(grid2[i][j].second==1){
-                    grid2[i][j+1] = make_pair(grid2[i][j].first,1);
-                } else {
-                    grid2[i][j+1] = make_pair(grid2[i][j].first+1,1);
-                }
-                Q.push(make_pair(i,j+1));
-            }
-        }
-
-        if(i+1<N){
-            //bottom
-            if(grid2[i+1][j].first==-1){
-                if(grid2[i][j].second==2){
-                    grid2[i+1][j] = make_pair(grid2[i][j].first,2);
-                } else {
-                    grid2[i+1][j] = make_pair(grid2[i][j].first+1,2);
-                }
-                Q.push(make_pair(i+1,j));
-            }
-        }
+        }            
     }
 
-    for(int i = 0; i<N; i++){
-        for(int j = 0; j<N; j++){
-            if(grid2[i][j].first==-2) cout << " ";
-            else if(grid2[i][j].first==-1) cout << " ";
-            else cout << "M";
-        }   
-        cout << endl;
-    }
-
-    return grid2[goalX][goalY].first;
+    return ans;
+    
 }
 
 int main()
 {
-    ofstream fout(getenv("OUTPUT_PATH"));
-
-    int n;
-    cin >> n;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    vector<string> grid(n);
-
-    for (int i = 0; i < n; i++) {
-        string grid_item;
-        getline(cin, grid_item);
-
-        grid[i] = grid_item;
+    int t;cin>>t;
+    while(t--){
+        int k;cin>>k;
+        string s1;string s2;
+        cin>>s1;cin>>s2;
+        cout << substringDiff(k,s1,s2) << endl;        
     }
-
-    string startXStartY_temp;
-    getline(cin, startXStartY_temp);
-
-    vector<string> startXStartY = split_string(startXStartY_temp);
-
-    int startX = stoi(startXStartY[0]);
-
-    int startY = stoi(startXStartY[1]);
-
-    int goalX = stoi(startXStartY[2]);
-
-    int goalY = stoi(startXStartY[3]);
-
-    int result = minimumMoves(grid, startX, startY, goalX, goalY);
-
-    fout << result << "\n";
-
-    fout.close();
 
     return 0;
-}
-
-vector<string> split_string(string input_string) {
-    string::iterator new_end = unique(input_string.begin(), input_string.end(), [] (const char &x, const char &y) {
-        return x == y and x == ' ';
-    });
-
-    input_string.erase(new_end, input_string.end());
-
-    while (input_string[input_string.length() - 1] == ' ') {
-        input_string.pop_back();
-    }
-
-    vector<string> splits;
-    char delimiter = ' ';
-
-    size_t i = 0;
-    size_t pos = input_string.find(delimiter);
-
-    while (pos != string::npos) {
-        splits.push_back(input_string.substr(i, pos - i));
-
-        i = pos + 1;
-        pos = input_string.find(delimiter, i);
-    }
-
-    splits.push_back(input_string.substr(i, min(pos, input_string.length()) - i + 1));
-
-    return splits;
 }

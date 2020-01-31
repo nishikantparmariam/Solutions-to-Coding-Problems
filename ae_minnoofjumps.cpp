@@ -2,6 +2,8 @@
 using namespace std;
 
 
+
+
 int main(){
     int arr[] = {1, 3, 6, 3, 2, 3, 6, 8, 9, 5};
     int n = sizeof(arr)/sizeof(arr[0]);
