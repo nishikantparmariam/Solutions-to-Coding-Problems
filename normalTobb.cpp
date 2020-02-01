@@ -108,4 +108,10 @@ Node* buildBalancedTree(Node* root){
     if(root==NULL) return NULL;
     vector<int> inorder_traversal_array;
     _inorderTrav(root, inorder_traversal_array);
+    Node *ans_root = NULL;
+    for(int x:inorder_traversal_array){
+        ans_root = InsertInBalancedTree(ans_root,x);
+    }
+
+    return ans_root;
 }
