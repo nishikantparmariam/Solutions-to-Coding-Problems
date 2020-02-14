@@ -33,6 +33,18 @@ int redJohn(int n) {
         }
     }
 
+
+    bool isPrime[N];
+    for(int i=0;i<N;i++) isPrime[i] = true;
+
+    for(int p=2;p*p<N;i++){
+        if(isPrime[p]){
+            for(int j=p*p;j<N;j+=p){
+                isPrime[j] = false;
+            }
+        }
+    }
+
     int ans = 0;
     for(int i=2;i<=ways;i++){
         if(sieve[i]) ans++;
