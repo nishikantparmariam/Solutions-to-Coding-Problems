@@ -27,7 +27,6 @@ int main()
                         dp[i][d] = 1;
                     } else {
                         if(true){
-
                             //from i-d to i-1 both inclusive
                             int low = 0;//i-d;
                             int high = i-1;
@@ -49,22 +48,14 @@ int main()
                                 dp[i][d] = 1+dp[ansIndex][d];
                             } else {
                                 dp[i][d] = 1;
-                            }
-                            /*
-                            if(arr[i]-arr[i-d]==d){
-                                dp[i][d] = 1+dp[i-d][d];
-                            } else {
-                                dp[i][d] = 1;
-                            } */
+                            }                            
                         } else {
                             dp[i][d] = 1;
                         }
                     }                    
-                }
-               // cout << dp[i][d] << " ";
+                }               
                 ans = max(ans, dp[i][d]);
-            }
-            //cout << endl;
+            }            
         }
 
         cout << ans << endl;

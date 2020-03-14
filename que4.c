@@ -15,7 +15,7 @@ READ ME -
 
 1) Please use appropriate name for the read file (data.csv here)
 2) (Assumption) In this question, I have set the value of Harmonic Mean or Geometric Mean to 'zero' if they do not exist 
-3) Floating pointing integer till 6th decimal point
+3) Floating point precision is till 6th decimal point
 
 */
 
@@ -45,9 +45,10 @@ int main(){
         //Initialise pointer that will store all characters of a single line from the reading file
         char *line = NULL;
 
+        //Initialise integral type variable to store size of 'line' in bytes
         size_t len = 0;
 
-        while(getline(&line, &len, fileToRead)>=0){  
+        while(getline(&line, &len, fileToRead)>=0){ 
             
             //Check if we have not reached end of file and move to the next line in each iteration of the loop
             

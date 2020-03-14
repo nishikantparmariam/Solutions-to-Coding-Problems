@@ -1,27 +1,10 @@
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long int ll;
-int profit_dp2[107][107];
 
-int profit2(int i, int X, int Y, int x, int N, int A[], int B[]){    
-    if(i==N) return 0;    
-    if(profit_dp2[i][x]!=-1) return profit_dp2[i][x];
 
-    int toOne = x;
-    int toTwo = (i+1)-x;
-
-    if(toOne<X && toTwo<Y){
-        //can go to anyone
-        profit_dp2[i][x] =  max(A[i]+profit2(i+1,X,Y,x+1,N,A,B), B[i]+profit2(i+1,X,Y,x,N,A,B));
-    } else if(toOne<X) {
-        //can go to only X
-        profit_dp2[i][x] =  max(A[i]+profit2(i+1,X,Y,x+1,N,A,B), 0);
-    } else {
-        //can go to only Y
-        profit_dp2[i][x] =  max(0, B[i]+profit2(i+1,X,Y,x,N,A,B));
-    }
-
-    return profit_dp2[i][x];
+bool func(const pair<int,pair<int,int>> &p1, const pair<int,pair<int,int>> &p2){
+    return p1.first > p2.first;
 }
 
 int main()
@@ -36,16 +19,42 @@ int main()
         int B[N];
         for(int i=0;i<N;i++) cin>>A[i];
         for(int i=0;i<N;i++) cin>>B[i];
-        
 
-        for(int i=0;i<107;i++){
-            for(int j=0;j<107;j++){                
-                    profit_dp2[i][j] = -1;
-                  
-            }   
-        } 
+        vector<pair<int,pair<int,int>>> S(N);
+        for(int i=0;i<N;i++){
+            S[i] = make_pair(abs(A[i]-B[i]), make_pair(A[i], B[i]));
+        }
 
-        cout << profit2(0,X,Y,0,N,A,B) << endl;
+        sort(S.begin(), S.end(), func);
+
+        int x = 0;
+        int y = 0;
+        int total_profit = 0;
+        for(int i=0;i<N;i++){
+            pair<int,pair<int,int>> p = S[i];
+            int Xi = p.second.first;
+            int Yi = p.second.second;
+            if(Xi > Yi){
+                if(x < X){
+                    x++;
+                    total_profit+=Xi;
+                } else {
+                    y++;
+                    total_profit+=Yi;
+                }
+            } else {
+                if(y < Y){
+                    y++;
+                    total_profit+=Yi;
+                } else {
+                    x++;
+                    total_profit+=Xi;
+                }
+            }
+        }
+
+        cout << total_profit << endl;
+
 	}
 	return 0;
 }
